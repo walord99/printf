@@ -1,0 +1,14 @@
+*
+!/**/
+!*.*
+!Makefile
+.vscode
+*.dSYM
+.DS_Store
+bin
+*.out
+testmain.c
+/debug_dir
+*.a
+build
+           
