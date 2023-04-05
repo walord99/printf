@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Ben <benplante99@gmail.com>                +#+  +:+       +#+        */
+/*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:46:28 by Ben               #+#    #+#             */
-/*   Updated: 2023/04/05 01:50:43 by Ben              ###   ########.fr       */
+/*   Updated: 2023/04/05 19:40:52 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 
 char	*format(char *str, va_list args, unsigned int *char_amount);
 int		number_char_amount(int n);
-char	*arg_to_string(char specifier, va_list args, char flag, int width,
-			int precision);
+int		arg_to_string(va_list args, char *str, char *specifier);
 
 int	ft_printf(const char *str, ...)
 {
@@ -42,31 +41,16 @@ int	ft_printf(const char *str, ...)
 	return (char_amount);
 }
 
-// #+ -0 https://cplusplus.com/reference/cstdio/printf/
-// atoi
-//aoit
-// put them in struct
 char	*format(char *str, va_list args, unsigned int *char_amount)
 {
-	char	*output;
-	char	flag;
-	int		width;
-	int		precision;
+	char	*flags_ptr;
 
-	if ((flag = *ft_strchr("#+ -0", *str)))
+	flags_ptr = str;
+	while (!ft_isalpha(*str) && !str)
 		str++;
-	if ((width = ft_atoi(str)))
-		str += number_char_amount(width);
-	if (*str == '.')
-	{
-		precision = ft_atoi(++str);
-		str += number_char_amount(precision);
-	}
-	else
-		precision = 0;
-	output = arg_to_string(*str, args, flag, width, precision);
-	ft_putstr(output);
-	*char_amount = ft_strlen(output);
+	if (str)
+		return (str);
+	*char_amount += arg_to_string(args, flags_ptr, str);
 	return (str);
 }
 
@@ -84,14 +68,58 @@ int	number_char_amount(int n)
 	}
 	return (1);
 }
+// c s p d i u x X %
+// precision
+// left pad with 0
+// left align
+// 0x/0X on hex
+// add space in front of number
+// add + if number is positive
+//
+// if left pad with zero works with + and ' '
 
-char	*arg_to_string(char specifier, va_list args, char flag, int width,
-		int precision)
+int	arg_to_string(va_list args, char *flags_start, char *specifier)
 {
-	va_arg(args, int);
-	specifier = (char)specifier;
-	flag = (char)flag;
-	width = (int)width;
-	precision = (int)precision;
-	return ("hello");
+	return (0);
+}
+
+char	*precision(char *str, char *input, unsigned int flags_len)
+{
+	size_t	precision_len;
+	char	*output;
+
+	precision_len = 0;
+	while (flags_len)
+	{
+		if (str[flags_len - 1] == '.')
+			precision_len = ft_atoi(&str[flags_len]);
+		flags_len--;
+	}
+	if (precision_len > ft_strlen(input))
+	{
+		output = ft_calloc(precision_len + 1, sizeof(char));
+		ft_strlcpy(output + (precision_len - ft_strlen(input)), input, 3);
+		precision_len -= ft_strlen(input);
+		while (precision_len--)
+			output[precision_len] = '0';
+		free(input);
+	}
+	else
+		output = input;
+	return (output);
+}
+
+int	minimum_width(char *str)
+{
+	while (!ft_isdigit(*str))
+		str++;
+	if (*str == '0')
+		str++;
+	if (ft_isdigit(*str))
+		return (ft_atoi(str));
+	return (0);
+}
+
+char	*pad(char *input, int pad_len, char pad_char)
+{
 }

@@ -3,7 +3,7 @@ SRC_NAME	= 	ft_printf2.c
 SRC			=  	$(addprefix $(SRC_DIR)/, $(SRC_NAME))
 OBJS		= 	$(addprefix $(BIN_DIR)/, $(SRC_NAME:.c=.o))
 NAME		= 	libftprintf.a
-CFLAGS		= 	-Wall -Wextra -Werror
+CFLAGS		= 	-Wall -Wextra -Werror -Wno-unused-parameter
 LIBC		= 	ar rcs
 BIN_DIR		= 	bin
 SRC_DIR		= 	src
@@ -19,7 +19,7 @@ $(NAME) : $(BIN_DIR) $(OBJS)
 	$(LIBC) $@ $(OBJS) 
 
 $(BIN_DIR)/%.o : $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(HEAD_DIR) -I $(LIBFT_DIR) -g
+	$(CC) $(CFLAGS) -c -g $< -o $@ -I $(HEAD_DIR) -I $(LIBFT_DIR)
 
 $(BIN_DIR):
 	@mkdir -p $(BIN_DIR)
@@ -37,7 +37,7 @@ debug: all test
 	lldb a.out
 
 test: all 
-	gcc testmain.c libftprintf.a -I headers -I libft -g -Wall -Werror -Wextra
+	gcc testmain.c libftprintf.a -I headers -I libft -g 
 	./a.out
 
 # gcc -c src/ft_printf.c -o ft_printf.o -I headers/ -I ../libft
