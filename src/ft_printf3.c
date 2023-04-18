@@ -6,7 +6,7 @@
 /*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 14:16:27 by bplante           #+#    #+#             */
-/*   Updated: 2023/04/18 16:41:02 by bplante          ###   ########.fr       */
+/*   Updated: 2023/04/18 17:03:26 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,9 +232,7 @@ int	format(va_list args, char **str, int char_amount)
 	char		*output;
 	int			i;
 	t_options	*options;
-	char		*test;
 
-	test = *str;
 	options = ft_calloc(sizeof(t_options), 1);
 	if (get_options(*str, options) == -1)
 		return (-1);
@@ -242,7 +240,10 @@ int	format(va_list args, char **str, int char_amount)
 	output = specifier_selector(args, options->specifier);
 	//output = apply_options(output, options);
 	i = ft_putstr_e(output);
+	if (options->specifier == 'c')
+		i = 1;
 	free(options);
+	free(output);
 	if (i == -1)
 		return (-1);
 	return (char_amount + i);
