@@ -1,5 +1,5 @@
 CC			= 	gcc
-SRC_NAME	= 	ft_printf2.c
+SRC_NAME	= 	ft_printf3.c
 SRC			=  	$(addprefix $(SRC_DIR)/, $(SRC_NAME))
 OBJS		= 	$(addprefix $(BIN_DIR)/, $(SRC_NAME:.c=.o))
 NAME		= 	libftprintf.a

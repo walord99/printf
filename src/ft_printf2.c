@@ -6,7 +6,7 @@
 /*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 22:46:28 by Ben               #+#    #+#             */
-/*   Updated: 2023/04/05 19:40:52 by bplante          ###   ########.fr       */
+/*   Updated: 2023/04/18 13:35:20 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 char	*format(char *str, va_list args, unsigned int *char_amount);
 int		number_char_amount(int n);
 int		arg_to_string(va_list args, char *str, char *specifier);
+char	*pad_zero(char *input, int pad_len);
 
 int	ft_printf(const char *str, ...)
 {
@@ -96,14 +97,7 @@ char	*precision(char *str, char *input, unsigned int flags_len)
 		flags_len--;
 	}
 	if (precision_len > ft_strlen(input))
-	{
-		output = ft_calloc(precision_len + 1, sizeof(char));
-		ft_strlcpy(output + (precision_len - ft_strlen(input)), input, 3);
-		precision_len -= ft_strlen(input);
-		while (precision_len--)
-			output[precision_len] = '0';
-		free(input);
-	}
+		output = pad_zero(input, precision_len);
 	else
 		output = input;
 	return (output);
@@ -120,6 +114,55 @@ int	minimum_width(char *str)
 	return (0);
 }
 
-char	*pad(char *input, int pad_len, char pad_char)
+char	*left_pad_space(char *input, int pad_len)
 {
+	int		str_len;
+	int		i;
+	char	*output;
+
+	output = input;
+	str_len = ft_strlen(input);
+	if (pad_len > str_len)
+	{
+		output = ft_calloc(pad_len + 1, sizeof(char));
+		i = 0;
+		while (i++ < pad_len - str_len)
+			output[i - 1] = ' ';
+		ft_strlcat(output, input, pad_len + 1);
+		free(input);
+	}
+	return (output);
+}
+
+char	*right_pad_space(char *input, int pad_len)
+{
+	int		str_len;
+	int		i;
+	char	*output;
+
+	output = input;
+	str_len = ft_strlen(input);
+	if (pad_len > str_len)
+	{
+		output = ft_calloc(pad_len + 1, sizeof(char));
+		ft_strlcat(output, input, pad_len + 1);
+		i = pad_len;
+		while (i-- > str_len)
+			output[i] = ' ';
+		free(input);
+	}
+	return (output);
+}
+
+char	*pad_zero(char *input, int pad_len)
+{
+	char	*output;
+
+	output = ft_calloc(pad_len + 1, sizeof(char));
+	ft_strlcpy(output + (pad_len - ft_strlen(input)), input, 3);
+	pad_len -= ft_strlen(input);
+	while (pad_len--)
+		output[pad_len] = '0';
+	free(input);
+	return (output);
 }

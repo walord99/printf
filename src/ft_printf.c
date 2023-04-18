@@ -27,7 +27,8 @@ int	ft_printf(const char *str, ...)
 			i += check_flags(&str[i + 1], args, &char_amount) + 1;
 		else
 		{
-			ft_putchar_fd(str[i], 1);
+			if (write(1, &str[i], 1) == -1)
+				return (-1);
 			char_amount++;
 		}
 		i++;
@@ -82,21 +83,28 @@ char	*find_type_flag(const char *str, const char *flagset)
 
 int	char_flag(char c)
 {
-	write(1, &c, 1);
-	return (1);
+	return (write(1, &c, 1));
 }
 int	str_flag(char *str)
 {
+	if (!str)
+	{
+		ft_putstr("(null)\0");
+		return (6);
+	}
 	ft_putstr(str);
 	return (ft_strlen(str));
 }
 int	int_flag(int i)
 {
 	char	*str;
+	int		len;
 
 	str = ft_itoa(i);
 	ft_putstr(str);
-	return (ft_strlen(str));
+	len = ft_strlen(str);
+	free(str);
+	return (len);
 }
 int	uint_hex_flag(unsigned long num, int is_caps)
 {
