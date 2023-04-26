@@ -6,7 +6,7 @@
 /*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 14:16:27 by bplante           #+#    #+#             */
-/*   Updated: 2023/04/25 19:14:53 by bplante          ###   ########.fr       */
+/*   Updated: 2023/04/26 13:54:24 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ char	*arg_to_char(char c)
 	char	*output;
 
 	output = ft_calloc(2, sizeof(char));
+	if (!output)
+		return (NULL);
 	output[0] = c;
 	return (output);
 }
@@ -119,7 +121,7 @@ char	*arg_to_uint_hex(unsigned long num, int is_caps)
 		i++;
 	str = ft_calloc(1, i);
 	if (!str)
-		return (0);
+		return (NULL);
 	else if (num == 0)
 		str[0] = '0';
 	while (num != 0)
@@ -175,14 +177,11 @@ char	*arg_to_ptr(void *ptr)
 	char	*str;
 
 	str = arg_to_uint_hex((unsigned long)ptr, 0);
+	if (!str)
+		return (NULL);
 	output = ft_strjoin("0x", str);
 	free(str);
 	return (output);
-}
-
-char	*percentage(void)
-{
-	return (ft_strdup("%"));
 }
 
 int	ft_printf(const char *str, ...)
@@ -213,16 +212,13 @@ int	ft_printf(const char *str, ...)
 	return (char_amount);
 }
 
-int		ft_putstr_e(char *str, t_options *options);
+int	ft_putstr_e(char *str, t_options *options)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (options->specifier == 'c')
-	{
-		i = 1;
-		write(1, &str[0], 1);
-	}
+		return (write(1, &str[0], 1));
 	while (str[i])
 	{
 		if (write(1, str + i, 1) == -1)
@@ -239,11 +235,17 @@ int	format(va_list args, char **str, int char_amount)
 	t_options	*options;
 
 	options = ft_calloc(sizeof(t_options), 1);
+	if (!options)
+		return (-1);
 	if (get_options(*str, options) == -1)
 		return (-1);
 	*str = ft_strchr(*str, options->specifier);
 	output = specifier_selector(args, options->specifier);
-	//output = apply_options(output, options);
+	if (!output)
+	{
+		free(options);
+		return (-1);
+	}
 	i = ft_putstr_e(output, options);
 	free(options);
 	free(output);
@@ -265,7 +267,7 @@ char	*specifier_selector(va_list args, char c)
 	else if (c == 'X')
 		return (arg_to_uint_hex(va_arg(args, unsigned int), 1));
 	else if (c == '%')
-		return (percentage());
+		return (ft_strdup("%"));
 	else if (c == 'u')
 		return (arg_to_uint(va_arg(args, unsigned int)));
 	else
