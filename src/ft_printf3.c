@@ -6,7 +6,7 @@
 /*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/18 14:16:27 by bplante           #+#    #+#             */
-/*   Updated: 2023/04/18 17:03:26 by bplante          ###   ########.fr       */
+/*   Updated: 2023/04/25 19:14:53 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,11 +213,16 @@ int	ft_printf(const char *str, ...)
 	return (char_amount);
 }
 
-int	ft_putstr_e(char *str)
+int		ft_putstr_e(char *str, t_options *options);
 {
-	int	i;
+	int i;
 
 	i = 0;
+	if (options->specifier == 'c')
+	{
+		i = 1;
+		write(1, &str[0], 1);
+	}
 	while (str[i])
 	{
 		if (write(1, str + i, 1) == -1)
@@ -239,9 +244,7 @@ int	format(va_list args, char **str, int char_amount)
 	*str = ft_strchr(*str, options->specifier);
 	output = specifier_selector(args, options->specifier);
 	//output = apply_options(output, options);
-	i = ft_putstr_e(output);
-	if (options->specifier == 'c')
-		i = 1;
+	i = ft_putstr_e(output, options);
 	free(options);
 	free(output);
 	if (i == -1)
@@ -252,7 +255,7 @@ int	format(va_list args, char **str, int char_amount)
 char	*specifier_selector(va_list args, char c)
 {
 	if (c == 'c')
-		return (arg_to_char(va_arg(args, int)));
+		return (arg_to_char(va_arg(args, unsigned int)));
 	else if (c == 's')
 		return (arg_to_str(va_arg(args, char *)));
 	else if (c == 'd' || c == 'i')
