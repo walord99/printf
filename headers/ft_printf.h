@@ -6,7 +6,7 @@
 /*   By: bplante <bplante@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 13:55:59 by bplante           #+#    #+#             */
-/*   Updated: 2023/04/26 13:45:07 by bplante          ###   ########.fr       */
+/*   Updated: 2023/05/23 11:54:17 by bplante          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int			get_precision(char *str, t_options *options);
 int			get_specifier(char *str, t_options *options);
 int			get_options(char *str, t_options *options);
 int			number_char_amount(int n);
-char		*arg_to_char(char c);
+char		*char_to_str(char c);
 char		*arg_to_int(int i);
 char		*arg_to_str(char *str);
 char		*arg_to_uint_hex(unsigned long num, int is_caps);
